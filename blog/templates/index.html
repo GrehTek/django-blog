@@ -1,0 +1,125 @@
+{% extends 'base.html' %} 
+{% load static %} 
+{% block title %}<title>BLOG|HOME</title> {% endblock %} 
+{% block styles %}<link rel="stylesheet" href="{% static 'css/index.css' %}?v={{timestamp}}" /> {% endblock %} 
+
+
+{% block content %}
+<section class="list-posts">
+  <div class="text-end" id="create-post-btn-container">
+    <a href="{% url 'dashboard_home' %}" class="btn btn-primary">Create Post</a>
+  </div>
+  <div class="container" id="blog-posts"> 
+    {% if blogposts %}
+      {% for post in blogposts %}
+      <div class="card mt-2">
+        <div class="card-body">
+          
+          <div class="row justify-content-between">
+            {% if current_user == post.blogpost_user %}
+              <div class="d-flex justify-content-end">
+                <a href="{% url 'edit_blogpost' post.id %}" class="btn btn-sm btn-primary me-2">
+                  <i class="fa fa-pencil"></i>
+                </a>
+                
+                <form method="post" class="delete-form">
+                  {% csrf_token %}
+                  <input type="hidden" value="{{post.pk}}" name="pk">
+                  <button type="submit" class="btn btn-sm btn-danger">
+                    <i class="fa fa-trash " id="delete-icon"></i>
+                  </button>
+                </form>                 
+
+              </div>
+            {% endif %}
+            <div>
+              <h5 class="card-title">{{ post.blogpost_title }}</h5>
+            </div>
+            <!-- only post created by the current user will have this -->
+
+          </div>
+          <p class="card-text">{{ post.blogpost_text }}</p>
+          <div class="row">
+            <div class="col-lg-6 col-md-6 col-12">
+              <p class="card-text"><small class="text-muted">Posted by {{ post.blogpost_author }} on {{ post.blogpost_created_at }}</small></p>
+            </div>
+            <div class="col-lg-6 col-md-6 col-12 text-lg-end text-md-end mt-2">                       
+               <span class="me-2" ><i class="fa-regular fa-thumbs-up cursor-pointer" data-id="{{ post.pk }}" id="likes"> {{ post.blogpost_likes}}</i></span> 
+              <span class="me-2">
+                <a href="{% url 'blog_comment' post.pk %}">
+                  <i class="fa-regular fa-comments cursor-pointer" data-id="{{ post.pk }}" id="comments">{{ post.blogpost_comments}} </i>
+                </a> 
+              </span>                       
+              <span class="me-2"><i class="fa fa-share cursor-pointer" data-id="{{ post.pk }}" id="share">{{ post.blogpost_shares}} </i>  </span>                       
+            </div>
+          </div>
+        </div>
+      </div>
+      {% endfor %}
+      {% else %}
+        <div class="card p-2">
+          No posts found. Create post
+        </div>
+    {% endif %}
+</section>
+
+<section>
+    <input type="hidden" value="" name="avatar" id="avatar">           
+</section>
+
+
+<section>
+  <!-- {%csrf_token%} -->
+  <script>
+    const delForm = document.querySelectorAll(".delete-form");
+    const likes = document.querySelectorAll("#likes");
+
+     let avatar = document.querySelector("#avatar")
+     const avatarForm = document.querySelector(".avatar-form");
+
+    delForm.forEach( form => {
+      form.addEventListener("submit", (e) => {
+        e.preventDefault()
+  
+        let conf = confirm("Are you sure you want to delete post?")
+  
+        if(conf){
+          e.target.submit()
+        }
+      })
+    })
+
+    likes.forEach( like => {
+      like.addEventListener("click", (e) => {    
+        // check if user is loggedin 
+        if("{{ user.is_authenticated}}" == 'True'){
+          console.log("{{user.is_authenticated}}")
+          helper(like, e)
+        }else{
+          alert("Please log in to like post")
+        }
+      })
+    })
+
+    // helper to get csrf token from cookie
+      const helper = (avatar, event) => {
+        fetch('blogpost/send-data/', {
+          method: "POST",
+          headers: {
+            "Content-Type":"application/json",
+            "X-CSRFToken" : "{{ csrf_token }}"
+          },
+          body: JSON.stringify({
+            'avatar': event.target.getAttribute('data-id')
+          })
+        })
+       .then( response => response.json())
+       .then( result => {
+          avatar.textContent = result.new_avatar
+       })
+       .catch( err => console.log(err))
+      }
+  </script>
+</section>
+
+{% endblock %}

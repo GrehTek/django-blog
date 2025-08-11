@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.7/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+      integrity="sha384-LN+7fdVzj6u52u30Kp6M/trliBMCMKTyK833zpbD+pXdCLuTusPj697FH4R/5mcr"
+      crossorigin="anonymous"
+    />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/7.0.0/css/all.min.css"
+      integrity="sha512-DxV+EoADOkOygM4IR9yXP8Sb2qwgidEmeqAEmDKIOfPRQZOWbXCzLC6vjbZyy0vPisbH2SyW27+ddLVCN+OMzQ=="
+      crossorigin="anonymous"
+      referrerpolicy="no-referrer"
+    />
+  <title>LOGOUT</title>
+</head>
+
+<style>
+  body {
+    position: relative;
+    background-color: rgba(0,0,0, 0.5);
+    display: flex;
+    height: 100vh;
+    justify-content: center;
+    align-items: center;
+    overflow: hidden;
+  }
+
+  body::before {
+    content: '';
+    position: absolute;
+  }
+
+</style>
+<body>
+
+  <div class="card p-3">
+    <form method="POST">
+      {% csrf_token %}
+      <p>Are you sure you want to logout?</p>
+      <div class="d-flex justify-content-between">
+
+        <button type="submit" class="btn btn-primary btn-sm">Logout</button>
+        <a href="{% url 'dashboard_home' %}" class="btn btn-secondary btn-sm">Cancel</a>
+      </div>
+    </form>
+  </div>
+  
+  
+</body>
+</html>

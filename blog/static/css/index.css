@@ -1,0 +1,37 @@
+#create-post-btn-container {
+  position: fixed;
+  z-index: 1;
+  background-color: white;
+  width: 100%;
+  right: 10px;
+  top: 0;
+  padding: 10px;
+  margin-bottom: 50px;
+}
+
+#blog-posts {
+  margin-top: 60px; /* Adjust based on the height of the fixed button */
+}
+
+.cursor-pointer {
+  cursor:pointer;
+}
+
+* {
+  padding: 0;
+  margin: 0;
+}
+
+body {
+  background-image: linear-gradient(to bottom right, skyblue, purple);
+  background-size: cover;
+  background-repeat: no-repeat;
+  height: 100dvh;
+  width: 100%;
+
+}
+
+.alert-error {
+  background-color: rgb(248, 104, 104);
+  color: white
+}
