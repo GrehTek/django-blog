@@ -22,5 +22,9 @@ body {
 @media only screen and (max-width: 375px){
   body {
     display: block;
+    height: 100%;
+    width: 100%;
+    background-color: green;
+
   }
 }
